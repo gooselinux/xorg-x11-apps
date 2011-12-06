@@ -1,0 +1,11 @@
+--- xorg-x11-apps-7.4/xvidtune-1.0.1/xvidtune.c.jx	2004-04-23 15:55:08.000000000 -0400
++++ xorg-x11-apps-7.4/xvidtune-1.0.1/xvidtune.c	2006-08-04 17:16:17.000000000 -0400
+@@ -965,7 +965,7 @@
+ 
+     wids[0] = XtCreateWidget (w1name, labelWidgetClass, form, NULL, 0);
+     if (findex >= PixelClock && findex <= VSyncRate)
+-	(void) sprintf(buf, "%6.2f", (float)AppRes.field[findex].val / 1000.0);
++	(void) snprintf(buf, 10, "%6.2f", (float)AppRes.field[findex].val / 1000.0);
+     else
+ 	(void) sprintf (buf, "%5d", AppRes.field[findex].val);
+     wids[1] = XtVaCreateWidget (w2name, labelWidgetClass,

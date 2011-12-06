@@ -1,0 +1,38 @@
+From 87ec8d42c7f8e4e0613bcbe59fb2db991e1e4acb Mon Sep 17 00:00:00 2001
+From: Kees Cook <kees.cook@canonical.com>
+Date: Wed, 14 Apr 2010 21:19:48 -0700
+Subject: [PATCH] Atoms from XIGetProperty are 32bits (#27657)
+
+A 32bit value must be dereferenced to correctly zero-extend an Atom
+from XIGetProperty.  On 64bit systems, Atom is 64bits, so the final
+Atom in a list will read garbage in the upper half of the Atom.
+
+X.Org Bug 27657 <http://bugs.freedesktop.org/show_bug.cgi?id=27657>
+
+Signed-off-by: Kees Cook <kees.cook@canonical.com>
+Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+---
+ src/property.c |    6 +++---
+ 1 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git xinput-1.5.1/src/property.c b/src/property.c
+index 6cd8e7a..f8b21c7 100644
+--- a/xinput-1.5.1/src/property.c
++++ b/xinput-1.5.1/src/property.c
+@@ -461,10 +461,10 @@ print_property_xi2(Display *dpy, int deviceid, Atom property)
+                     break;
+                 case XA_ATOM:
+                     {
+-                        Atom a = *(Atom*)ptr;
+-                        printf("\"%s\" (%d)",
++                        Atom a = *(uint32_t*)ptr;
++                        printf("\"%s\" (%ld)",
+                                 (a) ? XGetAtomName(dpy, a) : "None",
+-                                (int)a);
++                                a);
+                         break;
+                     }
+                     break;
+-- 
+1.7.0.1
+
